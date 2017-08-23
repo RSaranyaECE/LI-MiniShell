@@ -165,7 +165,6 @@ void delete_node(pid_t dpid)
 /* SIGINT handler */
 void int__signal_handler(int signum)
 {
-	printf("pid : %d\n", pid);
 	/* Send kill signal to currently running process  */
 	if (pid != 0)
 	{
@@ -175,17 +174,21 @@ void int__signal_handler(int signum)
 	/* Print prompt */
 	else
 	{
+		signal(signum, SIG_IGN);
 		i_flag = 1;
-		//printf(MAGENTA "[ %s ] " RESET, prompt);
-		//return;
 	}
 }
 
 /* SIGTSTP handler */
 void stop__signal_handler(int signum)
 {
-	/* Send stop signal to currently running process */
-	kill(pid, SIGSTOP);
+	if (pid != 0)
+	{
+		/* Send stop signal to currently running process */
+		kill(pid, SIGSTOP);
+	}
+	else
+		signal(signum, SIG_IGN);
 }
 
 /* SIGCHLD handler */
